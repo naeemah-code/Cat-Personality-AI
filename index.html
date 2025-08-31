@@ -2,116 +2,133 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <title>Cat Personality Analyzer</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cat Personality Analyzer - AI Powered</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto&display=swap" rel="stylesheet">
+    <!-- Google Fonts for cat vibes -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
-        /* ... same CSS as before ... */
         body {
-            font-family: 'Roboto', Arial, sans-serif;
-            background: linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%);
-            min-height: 100vh;
+            background: linear-gradient(120deg, #fbc2eb 0%, #a6c1ee 100%);
+            font-family: 'Quicksand', 'Montserrat', Arial, sans-serif;
             margin: 0;
+            min-height: 100vh;
+            color: #3a3550;
         }
         .app-bar {
-            background: #222d5b;
-            color: #fff;
-            padding: 18px 0;
-            text-align: center;
-            font-family: 'Montserrat', Arial, sans-serif;
-            font-size: 2rem;
+            background: #fff;
+            box-shadow: 0 6px 24px rgba(186,147,216,0.08);
+            font-size: 2.1rem;
+            font-family: 'Montserrat', sans-serif;
             font-weight: 700;
+            color: #a45fbf;
+            padding: 22px 0 18px;
+            text-align: center;
             letter-spacing: 1px;
-            box-shadow: 0 4px 12px rgba(34,45,91,0.15);
+            position: relative;
+        }
+        .app-bar .paw {
+            font-size: 2.1rem;
+            vertical-align: middle;
         }
         .container {
-            max-width: 370px;
-            margin: 32px auto;
+            max-width: 415px;
+            margin: 38px auto 22px;
             background: #fff;
-            border-radius: 22px;
-            box-shadow: 0 8px 32px rgba(34,45,91,0.13);
-            padding: 32px 22px 28px;
+            border-radius: 28px;
+            box-shadow: 0 12px 38px rgba(186,147,216,0.12);
+            padding: 38px 28px 38px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            position: relative;
         }
         .header {
             text-align: center;
-            margin-bottom: 18px;
+            margin-bottom: 22px;
         }
         .subtitle {
-            color: #4661a3;
-            font-size: 1.04rem;
+            color: #a45fbf;
+            font-size: 1.15rem;
             margin-top: 4px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
+            font-family: 'Montserrat', sans-serif;
         }
         .science-badge {
-            background: #e2eaff;
-            color: #5a7ed7;
-            font-size: 0.82rem;
-            padding: 4px 12px;
+            background: #fbc2eb;
+            color: #a45fbf;
+            font-size: 0.95rem;
+            padding: 4px 15px;
             border-radius: 15px;
             margin-bottom: 12px;
             display: inline-block;
             font-weight: 500;
         }
         .upload-area {
-            border: 2px dashed #89f7fe;
-            border-radius: 16px;
-            background: #f5f9ff;
-            padding: 32px 18px;
+            border: 2.5px dashed #a6c1ee;
+            border-radius: 18px;
+            background: #f3f5fe;
+            padding: 36px 18px;
             text-align: center;
-            color: #5479c7;
+            color: #a45fbf;
             cursor: pointer;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
             width: 100%;
             transition: border-color 0.2s;
+            position: relative;
         }
         .upload-area.dragover {
-            border-color: #66a6ff;
+            border-color: #fbc2eb;
         }
         .upload-icon {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+            font-size: 3.1rem;
+            margin-bottom: 9px;
         }
         .upload-text {
-            font-size: 1.07rem;
-            font-weight: 500;
+            font-size: 1.14rem;
+            font-weight: 600;
         }
         .upload-hint {
-            font-size: 0.84rem;
-            color: #a4b8d9;
+            font-size: 0.88rem;
+            color: #b2a3d6;
             margin-top: 4px;
         }
         #fileInput {
             display: none;
         }
+        .paw-bg {
+            position: absolute;
+            left: 10px;
+            bottom: 10px;
+            opacity: 0.12;
+            font-size: 4.2rem;
+            pointer-events: none;
+        }
         .preview-container {
-            margin-bottom: 12px;
+            margin-bottom: 16px;
             width: 100%;
             display: flex;
             justify-content: center;
         }
         .preview-image {
-            max-width: 180px;
-            max-height: 180px;
-            border-radius: 16px;
-            box-shadow: 0 2px 12px rgba(34,45,91,0.10);
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 18px;
+            box-shadow: 0 2px 16px rgba(186,147,216,0.10);
             margin: auto;
         }
         .analyze-btn {
-            background: linear-gradient(90deg, #66a6ff 0%, #89f7fe 100%);
+            background: linear-gradient(90deg, #a6c1ee 0%, #fbc2eb 100%);
             color: #fff;
             border: none;
-            border-radius: 12px;
-            padding: 14px 32px;
-            font-size: 1.13rem;
+            border-radius: 13px;
+            padding: 15px 36px;
+            font-size: 1.19rem;
             font-weight: 700;
-            margin: 11px 0 2px;
+            margin: 13px 0 2px;
             cursor: pointer;
-            letter-spacing: 0.5px;
-            box-shadow: 0 2px 8px rgba(102,166,255,0.15);
+            letter-spacing: 0.6px;
+            box-shadow: 0 2px 12px rgba(186,147,216,0.11);
             transition: background 0.2s, transform 0.2s;
         }
         .analyze-btn:active {
@@ -120,49 +137,50 @@
         .loading {
             display: none;
             text-align: center;
-            margin: 16px 0;
+            margin: 17px 0;
         }
         .spinner {
-            border: 5px solid #e2eaff;
-            border-top: 5px solid #66a6ff;
+            border: 6px solid #fbc2eb;
+            border-top: 6px solid #a6c1ee;
             border-radius: 50%;
-            width: 44px;
-            height: 44px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 10px;
+            width: 48px;
+            height: 48px;
+            animation: spin 0.9s linear infinite;
+            margin: 0 auto 11px;
         }
         @keyframes spin { 100% { transform: rotate(360deg); } }
         #loadingText {
-            color: #5a7ed7;
-            font-size: 1rem;
+            color: #a45fbf;
+            font-size: 1.06rem;
         }
         .results {
             display: none;
             width: 100%;
-            margin-top: 16px;
+            margin-top: 20px;
         }
         .personality-type {
             text-align: center;
-            margin-bottom: 10px;
+            margin-bottom: 14px;
         }
         .personality-emoji {
-            font-size: 2.6rem;
-            margin-bottom: 3px;
+            font-size: 2.8rem;
+            margin-bottom: 0px;
             display: block;
         }
         #typeName {
             font-family: 'Montserrat', Arial, sans-serif;
-            font-size: 1.25rem;
-            margin-bottom: 4px;
-            color: #222d5b;
+            font-size: 1.37rem;
+            margin-bottom: 2px;
+            color: #a45fbf;
         }
         .personality-tagline {
-            font-size: 1.02rem;
-            color: #5479c7;
+            font-size: 1.1rem;
+            color: #3a3550;
             margin-bottom: 10px;
+            font-family: 'Quicksand', sans-serif;
         }
         .feline-five {
-            margin-bottom: 9px;
+            margin-bottom: 12px;
         }
         .feline-five-list {
             list-style: none;
@@ -171,62 +189,66 @@
         }
         .feline-five-list li {
             margin: 7px 0;
-            background: #e2eaff;
-            color: #222d5b;
-            padding: 8px 12px;
-            border-radius: 11px;
-            font-size: 0.99rem;
+            background: #f3f5fe;
+            color: #3a3550;
+            padding: 9px 13px;
+            border-radius: 12px;
+            font-size: 1.03rem;
             display: flex;
             align-items: center;
         }
         .feline-score-bar {
             flex: 1;
-            height: 11px;
-            margin-left: 9px;
-            background: #d0eafd;
+            height: 13px;
+            margin-left: 8px;
+            background: #e9e5fc;
             border-radius: 8px;
             overflow: hidden;
         }
         .feline-score-bar-inner {
             height: 100%;
             border-radius: 8px;
-            background: linear-gradient(90deg, #66a6ff 0%, #89f7fe 100%);
+            background: linear-gradient(90deg, #a6c1ee 0%, #fbc2eb 100%);
         }
         .premium-section {
-            background: #f5f9ff;
-            border-radius: 14px;
-            padding: 12px 14px;
-            margin-bottom: 12px;
-            margin-top: 8px;
+            background: #f3f5fe;
+            border-radius: 16px;
+            padding: 18px 14px;
+            margin-bottom: 18px;
+            margin-top: 14px;
+            text-align: center;
         }
         .premium-section h3 {
-            color: #5a7ed7;
-            font-size: 1.08rem;
-            margin-bottom: 7px;
+            color: #a45fbf;
+            font-size: 1.13rem;
+            margin-bottom: 9px;
             font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
         }
         .premium-features {
             display: flex;
             flex-direction: column;
-            gap: 7px;
+            gap: 9px;
+            margin-bottom: 7px;
         }
         .premium-feature {
-            font-size: 0.97rem;
-            color: #222d5b;
+            font-size: 1.01rem;
+            color: #3a3550;
+            text-align: left;
         }
         .share-buttons {
             display: flex;
-            gap: 11px;
+            gap: 13px;
             justify-content: center;
-            margin-top: 10px;
+            margin-top: 14px;
         }
         .share-btn {
-            background: #e2eaff;
-            color: #4661a3;
+            background: #fbc2eb;
+            color: #a45fbf;
             border: none;
             border-radius: 10px;
-            padding: 9px 15px;
-            font-size: 1.01rem;
+            padding: 10px 17px;
+            font-size: 1.06rem;
             font-weight: 600;
             cursor: pointer;
             transition: background 0.2s, transform 0.2s;
@@ -236,34 +258,34 @@
         }
         .premium-btn {
             background: linear-gradient(90deg, #fbc2eb 0%, #a6c1ee 100%);
-            color: #222d5b;
+            color: #fff;
         }
         .download-btn {
             background: linear-gradient(90deg, #fda085 0%, #f6d365 100%);
-            color: #222d5b;
+            color: #3a3550;
         }
         .startover-btn {
             background: #fff;
-            color: #5479c7;
-            border: 2px solid #e2eaff;
+            color: #a45fbf;
+            border: 2px solid #fbc2eb;
             border-radius: 10px;
-            padding: 8px 14px;
-            font-size: 0.98rem;
+            padding: 9px 15px;
+            font-size: 1.02rem;
             font-weight: 600;
             cursor: pointer;
-            margin-top: 8px;
+            margin-top: 11px;
             margin-bottom: -6px;
         }
         .startover-btn:active {
-            background: #e2eaff;
+            background: #fbc2eb;
         }
         .consistency-note {
             background: #f6d365;
-            color: #222d5b;
-            font-size: 0.95rem;
+            color: #a45fbf;
+            font-size: 0.99rem;
             border-radius: 10px;
-            padding: 6px 12px;
-            margin-bottom: 9px;
+            padding: 7px 15px;
+            margin-bottom: 11px;
             display: none;
             text-align: center;
         }
@@ -274,79 +296,95 @@
             z-index: 999;
             left: 0; top: 0;
             width: 100%; height: 100%;
-            background: rgba(0,0,0,0.32);
+            background: rgba(164,95,191,0.18);
             align-items: center;
             justify-content: center;
         }
         .modal-content {
             background: #fff;
-            padding: 22px 18px 16px;
-            border-radius: 16px;
-            box-shadow: 0 4px 22px rgba(34,45,91,0.23);
+            padding: 28px 22px 20px;
+            border-radius: 24px;
+            box-shadow: 0 4px 32px rgba(164,95,191,0.15);
             text-align: center;
-            max-width: 340px;
+            max-width: 370px;
             margin: auto;
         }
         .modal-content h2 {
-            font-size: 1.22rem;
-            color: #222d5b;
-            margin-bottom: 8px;
+            font-size: 1.28rem;
+            color: #a45fbf;
+            margin-bottom: 10px;
         }
         .modal-content p {
-            font-size: 1rem;
-            color: #5479c7;
+            font-size: 1.06rem;
+            color: #3a3550;
             margin-bottom: 16px;
         }
         .modal-close {
-            background: #e2eaff;
-            color: #4661a3;
+            background: #fbc2eb;
+            color: #a45fbf;
             border: none;
-            border-radius: 8px;
-            padding: 7px 18px;
-            font-size: 1rem;
-            font-weight: 600;
+            border-radius: 10px;
+            padding: 8px 18px;
+            font-size: 1.06rem;
+            font-weight: 700;
             cursor: pointer;
         }
         .premium-features-modal ul {
             text-align: left;
-            margin: 0 auto 10px;
+            margin: 0 auto 12px;
             padding: 0 0 0 19px;
         }
         .premium-features-modal li {
             margin-bottom: 7px;
-            font-size: 0.98rem;
+            font-size: 1.03rem;
         }
-        @media (max-width: 500px) {
-            .container { max-width: 98vw; padding: 17px 4vw 14px; }
-            .app-bar { font-size: 1.33rem; }
+        /* Premium report styling */
+        .premium-report {
+            background: #fff7fa;
+            border-radius: 18px;
+            box-shadow: 0 2px 16px rgba(186,147,216,0.09);
+            padding: 22px 20px 22px;
+            margin: 18px 0 8px;
+            font-size: 1.06rem;
+        }
+        .premium-report h3 {
+            color: #a45fbf;
+            margin-bottom: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.19rem;
+        }
+        @media (max-width: 570px) {
+            .container { max-width: 98vw; padding: 17px 3vw 14px; }
+            .app-bar { font-size: 1.34rem; }
             .modal-content { max-width: 95vw;}
         }
     </style>
 </head>
 <body>
     <div class="app-bar">
-        🐱 Cat Personality Analyzer
+        <span class="paw">🐾</span> Cat Personality Analyzer
     </div>
     <div class="container">
         <div class="header">
-            <div class="subtitle">Discover your cat's unique personality using AI-powered behavioral analysis</div>
-            <div class="science-badge">✨ Based on "Feline Five" Scientific Research</div>
+            <div class="subtitle">Discover your cat's unique personality with science & AI</div>
+            <div class="science-badge">✨ Based on "Feline Five" Research</div>
         </div>
         <div class="upload-area" id="uploadArea">
             <div class="upload-icon">📸</div>
             <div class="upload-text">Click to upload your cat's photo</div>
             <div class="upload-hint">or drag and drop an image here</div>
             <input type="file" id="fileInput" accept="image/*">
+            <div class="paw-bg">🐾</div>
         </div>
         <div class="preview-container" id="previewContainer" style="display:none;">
             <img id="previewImage" class="preview-image" alt="Cat preview">
         </div>
         <button class="analyze-btn" id="analyzeBtn" style="display:none;">
-            ✨ Analyze My Cat's Personality
+            🧬 Analyze My Cat's Personality
         </button>
         <div class="loading" id="loading">
             <div class="spinner"></div>
-            <p id="loadingText">Analyzing your cat... discovering personality traits...</p>
+            <p id="loadingText">Analyzing your cat with science magic...</p>
         </div>
         <div class="results" id="results">
             <div class="consistency-note" id="consistencyNote">
@@ -354,71 +392,33 @@
                 <span style="opacity: 0.9; font-weight: normal;">This image has been analyzed before with the same results</span>
             </div>
             <div class="personality-type" id="personalityType">
-                <span class="personality-emoji" id="personalityEmoji">🎭</span>
-                <h2 id="typeName">The Confident Explorer</h2>
-                <p class="personality-tagline" id="tagline">"Adventure is out there, and I'll find it!"</p>
+                <span class="personality-emoji" id="personalityEmoji">😺</span>
+                <h2 id="typeName">Loading...</h2>
+                <p class="personality-tagline" id="tagline">"Loading..."</p>
             </div>
             <div class="feline-five" id="felineFive"></div>
             <div class="premium-section">
-                <h3>🌟 Unlock Premium Features</h3>
+                <h3>🌟 Premium Analysis</h3>
                 <div class="premium-features">
-                    <div class="premium-feature">
-                        <strong>🎨 Personalized Cat Card</strong><br>
-                        Beautiful downloadable card with your cat's photo and personality
-                    </div>
-                    <div class="premium-feature">
-                        <strong>📊 Detailed Analysis</strong><br>
-                        15+ sub-traits, behavioral predictions, and mood indicators
-                    </div>
-                    <div class="premium-feature">
-                        <strong>🎯 Care Recommendations</strong><br>
-                        Personalized feeding, play, and bonding advice
-                    </div>
-                    <div class="premium-feature">
-                        <strong>💝 Relationship Insights</strong><br>
-                        How your cat shows love and communicates with you
-                    </div>
-                    <div class="premium-feature">
-                        <strong>📝 PDF Download</strong><br>
-                        Premium printable card with cat art and expanded info
-                    </div>
+                    <div class="premium-feature">🎨 Detailed Cat Report: Complete personality, care tips, activities, and more!</div>
+                    <div class="premium-feature">📝 Download as PDF for sharing & printing</div>
                 </div>
+                <button class="share-btn premium-btn" id="premiumBtn">🌟 View Premium Report</button>
+                <button class="share-btn download-btn" id="downloadPdfBtn">📄 Download Premium PDF</button>
             </div>
+            <div id="premiumReport" style="display:none;"></div>
             <div class="share-buttons">
                 <button class="share-btn" id="shareBtn">📱 Share Results</button>
-                <button class="share-btn download-btn" id="downloadBtn">📄 Download Card</button>
-                <button class="share-btn premium-btn" id="premiumBtn">🌟 Get Premium ($5.99)</button>
+                <button class="share-btn startover-btn" id="startOverBtn">🔄 Start Over</button>
             </div>
-            <button class="startover-btn" id="startOverBtn">🔄 Start Over</button>
         </div>
     </div>
     <!-- Modal container -->
     <div class="modal" id="modal">
-        <div class="modal-content" id="modalContent">
-            <!-- Modal content will be injected by JS -->
-        </div>
+        <div class="modal-content" id="modalContent"></div>
     </div>
     <script>
-        const uploadArea = document.getElementById('uploadArea');
-        const fileInput = document.getElementById('fileInput');
-        const previewContainer = document.getElementById('previewContainer');
-        const previewImage = document.getElementById('previewImage');
-        const analyzeBtn = document.getElementById('analyzeBtn');
-        const loading = document.getElementById('loading');
-        const results = document.getElementById('results');
-        const consistencyNote = document.getElementById('consistencyNote');
-        const personalityEmoji = document.getElementById('personalityEmoji');
-        const typeName = document.getElementById('typeName');
-        const tagline = document.getElementById('tagline');
-        const felineFive = document.getElementById('felineFive');
-        const startOverBtn = document.getElementById('startOverBtn');
-        const shareBtn = document.getElementById('shareBtn');
-        const downloadBtn = document.getElementById('downloadBtn');
-        const premiumBtn = document.getElementById('premiumBtn');
-        const modal = document.getElementById('modal');
-        const modalContent = document.getElementById('modalContent');
-
-        // 10 surprise personalities!
+        // Personalities for demo purposes
         const personalities = [
             {
                 emoji: "🧭",
@@ -435,8 +435,8 @@
                 dislikes: "Closed doors, loud noises, being ignored.",
                 activities: "Interactive toys, puzzle feeders, climbing trees.",
                 psychology: "Adventurous, confident, loves stimulation.",
-                horoscope: "This month: Expect new adventures and hidden treats!",
-                cardColor: "#89f7fe"
+                careTips: "Encourage exploration with safe spaces, rotating toys, and puzzle feeders.",
+                horoscope: "This month: Expect new adventures and hidden treats!"
             },
             {
                 emoji: "😻",
@@ -453,82 +453,105 @@
                 dislikes: "Being alone, rough play, cold floors.",
                 activities: "Snuggling, slow wand toys, ambient music.",
                 psychology: "Affectionate, calm, thrives on connection.",
-                horoscope: "This month: Extra cuddles bring extra joy.",
-                cardColor: "#fbc2eb"
-            },
-            {
-                emoji: "🕵️‍♂️",
-                name: "The Mysterious Observer",
-                tagline: "I see all, but reveal little.",
-                scores: [
-                    {trait: "Openness", val: 73},
-                    {trait: "Dominance", val: 51},
-                    {trait: "Impulsiveness", val: 28},
-                    {trait: "Agreeableness", val: 56},
-                    {trait: "Neuroticism", val: 61}
-                ],
-                likes: "High perches, quiet corners, solo play.",
-                dislikes: "Unexpected guests, sudden changes, strong scents.",
-                activities: "Hiding games, silent observation, solo toys.",
-                psychology: "Independent, watchful, prefers routine.",
-                horoscope: "This month: Secret stashes, new hiding places await.",
-                cardColor: "#a6c1ee"
-            },
-            {
-                emoji: "🎩",
-                name: "The Regal Monarch",
-                tagline: "Royalty runs in my veins.",
-                scores: [
-                    {trait: "Openness", val: 60},
-                    {trait: "Dominance", val: 90},
-                    {trait: "Impulsiveness", val: 36},
-                    {trait: "Agreeableness", val: 41},
-                    {trait: "Neuroticism", val: 28}
-                ],
-                likes: "Sunbeams, velvet cushions, being admired.",
-                dislikes: "Being ignored, sharing toys, wet paws.",
-                activities: "Strutting, napping in high places, commanding attention.",
-                psychology: "Proud, assertive, knows they're special.",
-                horoscope: "This month: A new throne (or box) appears.",
-                cardColor: "#e2eaff"
-            },
-            {
-                emoji: "🤹‍♂️",
-                name: "The Playful Jester",
-                tagline: "Life is a game, and I'm always winning.",
-                scores: [
-                    {trait: "Openness", val: 87},
-                    {trait: "Dominance", val: 59},
-                    {trait: "Impulsiveness", val: 89},
-                    {trait: "Agreeableness", val: 53},
-                    {trait: "Neuroticism", val: 24}
-                ],
-                likes: "Chasing shadows, surprise pounces, silly antics.",
-                dislikes: "Boredom, empty food bowls, closed doors.",
-                activities: "Zoomies, toy tossing, curtain climbing.",
-                psychology: "Mischievous, energetic, always entertaining.",
-                horoscope: "This month: New games—and a little trouble.",
-                cardColor: "#f6d365"
-            },
-            {
-                emoji: "🦉",
-                name: "The Wise Sage",
-                tagline: "Patience and wisdom in every whisker.",
-                scores: [
-                    {trait: "Openness", val: 70},
-                    {trait: "Dominance", val: 35},
-                    {trait: "Impulsiveness", val: 19},
-                    {trait: "Agreeableness", val: 74},
-                    {trait: "Neuroticism", val: 38}
-                ],
-                likes: "Watching, pondering, slow movements.",
-                dislikes: "Chaos, loud TV, rushed meals.",
-                activities: "Meditative sitting, slow walks, thoughtful grooming.",
-                psychology: "Calm, observant, thoughtful.",
-                horoscope: "This month: Quiet wisdom brings new insights.",
-                cardColor: "#c2ffd8"
-            },
-            {
-                emoji: "🧙‍♂️",
-                name: "The Mystic Dreamer",
-                tagline: "I live between worlds—mostly in my own."
+                careTips: "Provide cozy spaces, plenty of affection, and soft blankets.",
+                horoscope: "This month: Extra cuddles bring extra joy."
+            }
+            // ...add more as needed...
+        ];
+
+        // Demo: Placeholder API integration
+        async function analyzeCatWithAPI(imageDataUrl) {
+            // Replace this endpoint with your actual ML backend!
+            // For demo, we'll just randomly pick a personality
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    const idx = Math.floor(Math.random() * personalities.length);
+                    resolve(personalities[idx]);
+                }, 1800);
+            });
+        }
+
+        // DOM elements
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const previewContainer = document.getElementById('previewContainer');
+        const previewImage = document.getElementById('previewImage');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const loading = document.getElementById('loading');
+        const results = document.getElementById('results');
+        const consistencyNote = document.getElementById('consistencyNote');
+        const personalityEmoji = document.getElementById('personalityEmoji');
+        const typeName = document.getElementById('typeName');
+        const tagline = document.getElementById('tagline');
+        const felineFive = document.getElementById('felineFive');
+        const startOverBtn = document.getElementById('startOverBtn');
+        const shareBtn = document.getElementById('shareBtn');
+        const premiumBtn = document.getElementById('premiumBtn');
+        const modal = document.getElementById('modal');
+        const modalContent = document.getElementById('modalContent');
+        const premiumReport = document.getElementById('premiumReport');
+        const downloadPdfBtn = document.getElementById('downloadPdfBtn');
+
+        let selectedPersonality = personalities[0];
+        let lastImageHash = null;
+        let lastResultIdx = null;
+
+        function resetApp() {
+            previewImage.src = "";
+            previewContainer.style.display = "none";
+            analyzeBtn.style.display = "none";
+            results.style.display = "none";
+            loading.style.display = "none";
+            consistencyNote.style.display = "none";
+            uploadArea.style.display = "block";
+            fileInput.value = "";
+            premiumReport.style.display = "none";
+            premiumReport.innerHTML = "";
+        }
+
+        function showResults(sameImage=false) {
+            if (sameImage) {
+                consistencyNote.style.display = "block";
+            } else {
+                consistencyNote.style.display = "none";
+            }
+            personalityEmoji.textContent = selectedPersonality.emoji;
+            typeName.textContent = selectedPersonality.name;
+            tagline.textContent = `"${selectedPersonality.tagline}"`;
+            felineFive.innerHTML = `<ul class="feline-five-list">
+                ${selectedPersonality.scores.map(s => 
+                    `<li>
+                        <span>${s.trait}</span>
+                        <div class="feline-score-bar">
+                            <div class="feline-score-bar-inner" style="width:${s.val}%;"></div>
+                        </div>
+                        <span style="margin-left:7px; font-weight:600;">${s.val}</span>
+                    </li>`
+                ).join("")}
+            </ul>`;
+            results.style.display = "block";
+            premiumReport.style.display = "none";
+            premiumReport.innerHTML = "";
+        }
+
+        function showModal(title, message, extraHtml="") {
+            modalContent.innerHTML = `
+                <h2>${title}</h2>
+                <p>${message}</p>
+                ${extraHtml}
+                <button class="modal-close" onclick="document.getElementById('modal').style.display='none'">OK</button>
+            `;
+            modal.style.display = "flex";
+        }
+        modal.addEventListener("click", function(e) {
+            if (e.target === modal) modal.style.display = "none";
+        });
+
+        // Upload logic
+        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        uploadArea.addEventListener('dragleave', () => {
+            uplo
