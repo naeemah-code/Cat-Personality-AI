@@ -4,27 +4,332 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cat Personality Analyzer - AI Powered</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
-        /* --- CSS copied from your original file --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* ... same CSS as before ... */
         body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Roboto', Arial, sans-serif;
+            background: linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%);
             min-height: 100vh;
+            margin: 0;
+        }
+        .app-bar {
+            background: #222d5b;
+            color: #fff;
+            padding: 18px 0;
+            text-align: center;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 12px rgba(34,45,91,0.15);
+        }
+        .container {
+            max-width: 370px;
+            margin: 32px auto;
+            background: #fff;
+            border-radius: 22px;
+            box-shadow: 0 8px 32px rgba(34,45,91,0.13);
+            padding: 32px 22px 28px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 18px;
+        }
+        .subtitle {
+            color: #4661a3;
+            font-size: 1.04rem;
+            margin-top: 4px;
+            margin-bottom: 8px;
+        }
+        .science-badge {
+            background: #e2eaff;
+            color: #5a7ed7;
+            font-size: 0.82rem;
+            padding: 4px 12px;
+            border-radius: 15px;
+            margin-bottom: 12px;
+            display: inline-block;
+            font-weight: 500;
+        }
+        .upload-area {
+            border: 2px dashed #89f7fe;
+            border-radius: 16px;
+            background: #f5f9ff;
+            padding: 32px 18px;
+            text-align: center;
+            color: #5479c7;
+            cursor: pointer;
+            margin-bottom: 16px;
+            width: 100%;
+            transition: border-color 0.2s;
+        }
+        .upload-area.dragover {
+            border-color: #66a6ff;
+        }
+        .upload-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        .upload-text {
+            font-size: 1.07rem;
+            font-weight: 500;
+        }
+        .upload-hint {
+            font-size: 0.84rem;
+            color: #a4b8d9;
+            margin-top: 4px;
+        }
+        #fileInput {
+            display: none;
+        }
+        .preview-container {
+            margin-bottom: 12px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        .preview-image {
+            max-width: 180px;
+            max-height: 180px;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(34,45,91,0.10);
+            margin: auto;
+        }
+        .analyze-btn {
+            background: linear-gradient(90deg, #66a6ff 0%, #89f7fe 100%);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 14px 32px;
+            font-size: 1.13rem;
+            font-weight: 700;
+            margin: 11px 0 2px;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 8px rgba(102,166,255,0.15);
+            transition: background 0.2s, transform 0.2s;
+        }
+        .analyze-btn:active {
+            transform: scale(0.97);
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 16px 0;
+        }
+        .spinner {
+            border: 5px solid #e2eaff;
+            border-top: 5px solid #66a6ff;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        #loadingText {
+            color: #5a7ed7;
+            font-size: 1rem;
+        }
+        .results {
+            display: none;
+            width: 100%;
+            margin-top: 16px;
+        }
+        .personality-type {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .personality-emoji {
+            font-size: 2.6rem;
+            margin-bottom: 3px;
+            display: block;
+        }
+        #typeName {
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 1.25rem;
+            margin-bottom: 4px;
+            color: #222d5b;
+        }
+        .personality-tagline {
+            font-size: 1.02rem;
+            color: #5479c7;
+            margin-bottom: 10px;
+        }
+        .feline-five {
+            margin-bottom: 9px;
+        }
+        .feline-five-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .feline-five-list li {
+            margin: 7px 0;
+            background: #e2eaff;
+            color: #222d5b;
+            padding: 8px 12px;
+            border-radius: 11px;
+            font-size: 0.99rem;
             display: flex;
             align-items: center;
-            justify-content: center;
-            padding: 20px;
         }
-        /* [All other CSS remains exactly as you posted above! (omitted for brevity)] */
-        /* You can copy the full CSS from your original message here */
+        .feline-score-bar {
+            flex: 1;
+            height: 11px;
+            margin-left: 9px;
+            background: #d0eafd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .feline-score-bar-inner {
+            height: 100%;
+            border-radius: 8px;
+            background: linear-gradient(90deg, #66a6ff 0%, #89f7fe 100%);
+        }
+        .premium-section {
+            background: #f5f9ff;
+            border-radius: 14px;
+            padding: 12px 14px;
+            margin-bottom: 12px;
+            margin-top: 8px;
+        }
+        .premium-section h3 {
+            color: #5a7ed7;
+            font-size: 1.08rem;
+            margin-bottom: 7px;
+            font-weight: 700;
+        }
+        .premium-features {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+        .premium-feature {
+            font-size: 0.97rem;
+            color: #222d5b;
+        }
+        .share-buttons {
+            display: flex;
+            gap: 11px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .share-btn {
+            background: #e2eaff;
+            color: #4661a3;
+            border: none;
+            border-radius: 10px;
+            padding: 9px 15px;
+            font-size: 1.01rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .share-btn:active {
+            transform: scale(0.96);
+        }
+        .premium-btn {
+            background: linear-gradient(90deg, #fbc2eb 0%, #a6c1ee 100%);
+            color: #222d5b;
+        }
+        .download-btn {
+            background: linear-gradient(90deg, #fda085 0%, #f6d365 100%);
+            color: #222d5b;
+        }
+        .startover-btn {
+            background: #fff;
+            color: #5479c7;
+            border: 2px solid #e2eaff;
+            border-radius: 10px;
+            padding: 8px 14px;
+            font-size: 0.98rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+            margin-bottom: -6px;
+        }
+        .startover-btn:active {
+            background: #e2eaff;
+        }
+        .consistency-note {
+            background: #f6d365;
+            color: #222d5b;
+            font-size: 0.95rem;
+            border-radius: 10px;
+            padding: 6px 12px;
+            margin-bottom: 9px;
+            display: none;
+            text-align: center;
+        }
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.32);
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background: #fff;
+            padding: 22px 18px 16px;
+            border-radius: 16px;
+            box-shadow: 0 4px 22px rgba(34,45,91,0.23);
+            text-align: center;
+            max-width: 340px;
+            margin: auto;
+        }
+        .modal-content h2 {
+            font-size: 1.22rem;
+            color: #222d5b;
+            margin-bottom: 8px;
+        }
+        .modal-content p {
+            font-size: 1rem;
+            color: #5479c7;
+            margin-bottom: 16px;
+        }
+        .modal-close {
+            background: #e2eaff;
+            color: #4661a3;
+            border: none;
+            border-radius: 8px;
+            padding: 7px 18px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .premium-features-modal ul {
+            text-align: left;
+            margin: 0 auto 10px;
+            padding: 0 0 0 19px;
+        }
+        .premium-features-modal li {
+            margin-bottom: 7px;
+            font-size: 0.98rem;
+        }
+        @media (max-width: 500px) {
+            .container { max-width: 98vw; padding: 17px 4vw 14px; }
+            .app-bar { font-size: 1.33rem; }
+            .modal-content { max-width: 95vw;}
+        }
     </style>
 </head>
 <body>
+    <div class="app-bar">
+        🐱 Cat Personality Analyzer
+    </div>
     <div class="container">
         <div class="header">
-            <h1>🐱 Cat Personality Analyzer</h1>
-            <p class="subtitle">Discover your cat's unique personality using AI-powered behavioral analysis</p>
+            <div class="subtitle">Discover your cat's unique personality using AI-powered behavioral analysis</div>
             <div class="science-badge">✨ Based on "Feline Five" Scientific Research</div>
         </div>
         <div class="upload-area" id="uploadArea">
@@ -33,15 +338,15 @@
             <div class="upload-hint">or drag and drop an image here</div>
             <input type="file" id="fileInput" accept="image/*">
         </div>
-        <div class="preview-container" id="previewContainer">
+        <div class="preview-container" id="previewContainer" style="display:none;">
             <img id="previewImage" class="preview-image" alt="Cat preview">
         </div>
-        <button class="analyze-btn" id="analyzeBtn">
+        <button class="analyze-btn" id="analyzeBtn" style="display:none;">
             ✨ Analyze My Cat's Personality
         </button>
         <div class="loading" id="loading">
             <div class="spinner"></div>
-            <p id="loadingText">Analyzing facial expressions, body language, and environmental cues...</p>
+            <p id="loadingText">Analyzing your cat... discovering personality traits...</p>
         </div>
         <div class="results" id="results">
             <div class="consistency-note" id="consistencyNote">
@@ -73,19 +378,157 @@
                         <strong>💝 Relationship Insights</strong><br>
                         How your cat shows love and communicates with you
                     </div>
+                    <div class="premium-feature">
+                        <strong>📝 PDF Download</strong><br>
+                        Premium printable card with cat art and expanded info
+                    </div>
                 </div>
             </div>
             <div class="share-buttons">
                 <button class="share-btn" id="shareBtn">📱 Share Results</button>
                 <button class="share-btn download-btn" id="downloadBtn">📄 Download Card</button>
-                <button class="share-btn premium-btn" id="premiumBtn">🌟 Get Premium ($4.99)</button>
+                <button class="share-btn premium-btn" id="premiumBtn">🌟 Get Premium ($5.99)</button>
             </div>
+            <button class="startover-btn" id="startOverBtn">🔄 Start Over</button>
+        </div>
+    </div>
+    <!-- Modal container -->
+    <div class="modal" id="modal">
+        <div class="modal-content" id="modalContent">
+            <!-- Modal content will be injected by JS -->
         </div>
     </div>
     <script>
-        // --- JavaScript copied from your original file ---
-        // [Paste the entire JavaScript block from your original file here]
-        // This includes all functions and logic exactly as you posted above!
-    </script>
-</body>
-</html>
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const previewContainer = document.getElementById('previewContainer');
+        const previewImage = document.getElementById('previewImage');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const loading = document.getElementById('loading');
+        const results = document.getElementById('results');
+        const consistencyNote = document.getElementById('consistencyNote');
+        const personalityEmoji = document.getElementById('personalityEmoji');
+        const typeName = document.getElementById('typeName');
+        const tagline = document.getElementById('tagline');
+        const felineFive = document.getElementById('felineFive');
+        const startOverBtn = document.getElementById('startOverBtn');
+        const shareBtn = document.getElementById('shareBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const premiumBtn = document.getElementById('premiumBtn');
+        const modal = document.getElementById('modal');
+        const modalContent = document.getElementById('modalContent');
+
+        // 10 surprise personalities!
+        const personalities = [
+            {
+                emoji: "🧭",
+                name: "The Confident Explorer",
+                tagline: "Adventure is out there, and I'll find it!",
+                scores: [
+                    {trait: "Openness", val: 85},
+                    {trait: "Dominance", val: 76},
+                    {trait: "Impulsiveness", val: 38},
+                    {trait: "Agreeableness", val: 67},
+                    {trait: "Neuroticism", val: 32}
+                ],
+                likes: "Exploring new places, window perching, meeting new humans.",
+                dislikes: "Closed doors, loud noises, being ignored.",
+                activities: "Interactive toys, puzzle feeders, climbing trees.",
+                psychology: "Adventurous, confident, loves stimulation.",
+                horoscope: "This month: Expect new adventures and hidden treats!",
+                cardColor: "#89f7fe"
+            },
+            {
+                emoji: "😻",
+                name: "The Gentle Companion",
+                tagline: "Love and cuddles are my superpower.",
+                scores: [
+                    {trait: "Openness", val: 61},
+                    {trait: "Dominance", val: 42},
+                    {trait: "Impulsiveness", val: 21},
+                    {trait: "Agreeableness", val: 94},
+                    {trait: "Neuroticism", val: 19}
+                ],
+                likes: "Lap naps, gentle petting, soft blankets.",
+                dislikes: "Being alone, rough play, cold floors.",
+                activities: "Snuggling, slow wand toys, ambient music.",
+                psychology: "Affectionate, calm, thrives on connection.",
+                horoscope: "This month: Extra cuddles bring extra joy.",
+                cardColor: "#fbc2eb"
+            },
+            {
+                emoji: "🕵️‍♂️",
+                name: "The Mysterious Observer",
+                tagline: "I see all, but reveal little.",
+                scores: [
+                    {trait: "Openness", val: 73},
+                    {trait: "Dominance", val: 51},
+                    {trait: "Impulsiveness", val: 28},
+                    {trait: "Agreeableness", val: 56},
+                    {trait: "Neuroticism", val: 61}
+                ],
+                likes: "High perches, quiet corners, solo play.",
+                dislikes: "Unexpected guests, sudden changes, strong scents.",
+                activities: "Hiding games, silent observation, solo toys.",
+                psychology: "Independent, watchful, prefers routine.",
+                horoscope: "This month: Secret stashes, new hiding places await.",
+                cardColor: "#a6c1ee"
+            },
+            {
+                emoji: "🎩",
+                name: "The Regal Monarch",
+                tagline: "Royalty runs in my veins.",
+                scores: [
+                    {trait: "Openness", val: 60},
+                    {trait: "Dominance", val: 90},
+                    {trait: "Impulsiveness", val: 36},
+                    {trait: "Agreeableness", val: 41},
+                    {trait: "Neuroticism", val: 28}
+                ],
+                likes: "Sunbeams, velvet cushions, being admired.",
+                dislikes: "Being ignored, sharing toys, wet paws.",
+                activities: "Strutting, napping in high places, commanding attention.",
+                psychology: "Proud, assertive, knows they're special.",
+                horoscope: "This month: A new throne (or box) appears.",
+                cardColor: "#e2eaff"
+            },
+            {
+                emoji: "🤹‍♂️",
+                name: "The Playful Jester",
+                tagline: "Life is a game, and I'm always winning.",
+                scores: [
+                    {trait: "Openness", val: 87},
+                    {trait: "Dominance", val: 59},
+                    {trait: "Impulsiveness", val: 89},
+                    {trait: "Agreeableness", val: 53},
+                    {trait: "Neuroticism", val: 24}
+                ],
+                likes: "Chasing shadows, surprise pounces, silly antics.",
+                dislikes: "Boredom, empty food bowls, closed doors.",
+                activities: "Zoomies, toy tossing, curtain climbing.",
+                psychology: "Mischievous, energetic, always entertaining.",
+                horoscope: "This month: New games—and a little trouble.",
+                cardColor: "#f6d365"
+            },
+            {
+                emoji: "🦉",
+                name: "The Wise Sage",
+                tagline: "Patience and wisdom in every whisker.",
+                scores: [
+                    {trait: "Openness", val: 70},
+                    {trait: "Dominance", val: 35},
+                    {trait: "Impulsiveness", val: 19},
+                    {trait: "Agreeableness", val: 74},
+                    {trait: "Neuroticism", val: 38}
+                ],
+                likes: "Watching, pondering, slow movements.",
+                dislikes: "Chaos, loud TV, rushed meals.",
+                activities: "Meditative sitting, slow walks, thoughtful grooming.",
+                psychology: "Calm, observant, thoughtful.",
+                horoscope: "This month: Quiet wisdom brings new insights.",
+                cardColor: "#c2ffd8"
+            },
+            {
+                emoji: "🧙‍♂️",
+                name: "The Mystic Dreamer",
+                tagline: "I live between worlds—mostly in my own."
