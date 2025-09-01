@@ -4,471 +4,245 @@
     <meta charset="UTF-8">
     <title>Cat Personality Analyzer</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Google Fonts for cat vibes -->
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
-        body {
-            background: linear-gradient(120deg, #fbc2eb 0%, #a6c1ee 100%);
-            font-family: 'Quicksand', 'Montserrat', Arial, sans-serif;
-            margin: 0;
-            min-height: 100vh;
-            color: #3a3550;
-        }
-        .app-bar {
-            background: #fff;
-            box-shadow: 0 6px 24px rgba(186,147,216,0.08);
-            font-size: 2.1rem;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700;
-            color: #a45fbf;
-            padding: 22px 0 18px;
-            text-align: center;
-            letter-spacing: 1px;
-            position: relative;
-        }
-        .app-bar .paw {
-            font-size: 2.1rem;
-            vertical-align: middle;
-        }
-        .container {
-            max-width: 415px;
-            margin: 38px auto 22px;
-            background: #fff;
-            border-radius: 28px;
-            box-shadow: 0 12px 38px rgba(186,147,216,0.12);
-            padding: 38px 28px 38px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 22px;
-        }
-        .subtitle {
-            color: #a45fbf;
-            font-size: 1.15rem;
-            margin-top: 4px;
-            margin-bottom: 6px;
-            font-family: 'Montserrat', sans-serif;
-        }
-        .science-badge {
-            background: #fbc2eb;
-            color: #a45fbf;
-            font-size: 0.95rem;
-            padding: 4px 15px;
-            border-radius: 15px;
-            margin-bottom: 12px;
-            display: inline-block;
-            font-weight: 500;
-        }
-        .upload-area {
-            border: 2.5px dashed #a6c1ee;
-            border-radius: 18px;
-            background: #f3f5fe;
-            padding: 36px 18px;
-            text-align: center;
-            color: #a45fbf;
-            cursor: pointer;
-            margin-bottom: 18px;
-            width: 100%;
-            transition: border-color 0.2s;
-            position: relative;
-        }
-        .upload-area.dragover {
-            border-color: #fbc2eb;
-        }
-        .upload-icon {
-            font-size: 3.1rem;
-            margin-bottom: 9px;
-        }
-        .upload-text {
-            font-size: 1.14rem;
-            font-weight: 600;
-        }
-        .upload-hint {
-            font-size: 0.88rem;
-            color: #b2a3d6;
-            margin-top: 4px;
-        }
-        #fileInput {
-            display: none;
-        }
-        .paw-bg {
-            position: absolute;
-            left: 10px;
-            bottom: 10px;
-            opacity: 0.12;
-            font-size: 4.2rem;
-            pointer-events: none;
-        }
-        .preview-container {
-            margin-bottom: 16px;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-        }
-        .preview-image {
-            max-width: 200px;
-            max-height: 200px;
-            border-radius: 18px;
-            box-shadow: 0 2px 16px rgba(186,147,216,0.10);
-            margin: auto;
-        }
-        .analyze-btn {
-            background: linear-gradient(90deg, #a6c1ee 0%, #fbc2eb 100%);
-            color: #fff;
-            border: none;
-            border-radius: 13px;
-            padding: 15px 36px;
-            font-size: 1.19rem;
-            font-weight: 700;
-            margin: 13px 0 2px;
-            cursor: pointer;
-            letter-spacing: 0.6px;
-            box-shadow: 0 2px 12px rgba(186,147,216,0.11);
-            transition: background 0.2s, transform 0.2s;
-        }
-        .analyze-btn:active {
-            transform: scale(0.97);
-        }
-        .loading {
-            display: none;
-            text-align: center;
-            margin: 17px 0;
-        }
-        .spinner {
-            border: 6px solid #fbc2eb;
-            border-top: 6px solid #a6c1ee;
-            border-radius: 50%;
-            width: 48px;
-            height: 48px;
-            animation: spin 0.9s linear infinite;
-            margin: 0 auto 11px;
-        }
+        body { background: linear-gradient(120deg, #fbc2eb 0%, #a6c1ee 100%); font-family: 'Quicksand', 'Montserrat', Arial, sans-serif; margin: 0; min-height: 100vh; color: #3a3550;}
+        .app-bar { background: #fff; box-shadow: 0 6px 24px rgba(186,147,216,0.08); font-size: 2.1rem; font-family: 'Montserrat', sans-serif; font-weight: 700; color: #a45fbf; padding: 22px 0 18px; text-align: center; letter-spacing: 1px;}
+        .container { max-width: 415px; margin: 38px auto 22px; background: #fff; border-radius: 28px; box-shadow: 0 12px 38px rgba(186,147,216,0.12); padding: 38px 28px 38px; display: flex; flex-direction: column; align-items: center;}
+        .header { text-align: center; margin-bottom: 22px;}
+        .upload-area { border: 2.5px dashed #a6c1ee; border-radius: 18px; background: #f3f5fe; padding: 36px 18px; text-align: center; color: #a45fbf; cursor: pointer; margin-bottom: 18px; width: 100%; transition: border-color 0.2s; position: relative;}
+        .upload-area.dragover { border-color: #fbc2eb;}
+        .upload-icon { font-size: 3.1rem; margin-bottom: 9px;}
+        .upload-text { font-size: 1.14rem; font-weight: 600;}
+        .upload-hint { font-size: 0.88rem; color: #b2a3d6; margin-top: 4px;}
+        #fileInput { display: none;}
+        .preview-container { margin-bottom: 16px; width: 100%; display: flex; justify-content: center;}
+        .preview-image { max-width: 200px; max-height: 200px; border-radius: 18px; box-shadow: 0 2px 16px rgba(186,147,216,0.10); margin: auto;}
+        .cat-extra-form { margin-bottom: 17px; text-align: left;}
+        .cat-extra-form label { font-size: 1.05rem; color: #a45fbf; margin-bottom: 2px; display:block;}
+        .cat-extra-form input { width: 100%; padding: 7px 8px; border-radius: 8px; border: 1.5px solid #e9e5fc; margin-bottom: 8px; font-size: 1rem;}
+        .analyze-btn { background: linear-gradient(90deg, #a6c1ee 0%, #fbc2eb 100%); color: #fff; border: none; border-radius: 13px; padding: 15px 36px; font-size: 1.19rem; font-weight: 700; margin: 13px 0 2px; cursor: pointer; letter-spacing: 0.6px; box-shadow: 0 2px 12px rgba(186,147,216,0.11); transition: background 0.2s, transform 0.2s;}
+        .analyze-btn:active { transform: scale(0.97);}
+        .loading { display: none; text-align: center; margin: 17px 0;}
+        .spinner { border: 6px solid #fbc2eb; border-top: 6px solid #a6c1ee; border-radius: 50%; width: 48px; height: 48px; animation: spin 0.9s linear infinite; margin: 0 auto 11px;}
         @keyframes spin { 100% { transform: rotate(360deg); } }
-        #loadingText {
-            color: #a45fbf;
-            font-size: 1.06rem;
-        }
-        .results {
-            display: none;
-            width: 100%;
-            margin-top: 20px;
-        }
-        .personality-type {
-            text-align: center;
-            margin-bottom: 14px;
-        }
-        .personality-emoji {
-            font-size: 2.8rem;
-            margin-bottom: 0px;
-            display: block;
-        }
-        #typeName {
-            font-family: 'Montserrat', Arial, sans-serif;
-            font-size: 1.37rem;
-            margin-bottom: 2px;
-            color: #a45fbf;
-        }
-        .personality-tagline {
-            font-size: 1.1rem;
-            color: #3a3550;
-            margin-bottom: 10px;
-            font-family: 'Quicksand', sans-serif;
-        }
-        .feline-five {
-            margin-bottom: 12px;
-        }
-        .feline-five-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .feline-five-list li {
-            margin: 7px 0;
-            background: #f3f5fe;
-            color: #3a3550;
-            padding: 9px 13px;
-            border-radius: 12px;
-            font-size: 1.03rem;
-            display: flex;
-            align-items: center;
-        }
-        .feline-score-bar {
-            flex: 1;
-            height: 13px;
-            margin-left: 8px;
-            background: #e9e5fc;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        .feline-score-bar-inner {
-            height: 100%;
-            border-radius: 8px;
-            background: linear-gradient(90deg, #a6c1ee 0%, #fbc2eb 100%);
-        }
-        .premium-section {
-            background: #f3f5fe;
-            border-radius: 16px;
-            padding: 18px 14px;
-            margin-bottom: 18px;
-            margin-top: 14px;
-            text-align: center;
-        }
-        .premium-section h3 {
-            color: #a45fbf;
-            font-size: 1.13rem;
-            margin-bottom: 9px;
-            font-weight: 700;
-            font-family: 'Montserrat', sans-serif;
-        }
-        .premium-features {
-            display: flex;
-            flex-direction: column;
-            gap: 9px;
-            margin-bottom: 7px;
-        }
-        .premium-feature {
-            font-size: 1.01rem;
-            color: #3a3550;
-            text-align: left;
-        }
-        .share-buttons {
-            display: flex;
-            gap: 13px;
-            justify-content: center;
-            margin-top: 14px;
-        }
-        .share-btn {
-            background: #fbc2eb;
-            color: #a45fbf;
-            border: none;
-            border-radius: 10px;
-            padding: 10px 17px;
-            font-size: 1.06rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.2s;
-        }
-        .share-btn:active {
-            transform: scale(0.96);
-        }
-        .premium-btn {
-            background: linear-gradient(90deg, #fbc2eb 0%, #a6c1ee 100%);
-            color: #fff;
-        }
-        .download-btn {
-            background: linear-gradient(90deg, #fda085 0%, #f6d365 100%);
-            color: #3a3550;
-        }
-        .startover-btn {
-            background: #fff;
-            color: #a45fbf;
-            border: 2px solid #fbc2eb;
-            border-radius: 10px;
-            padding: 9px 15px;
-            font-size: 1.02rem;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 11px;
-            margin-bottom: -6px;
-        }
-        .startover-btn:active {
-            background: #fbc2eb;
-        }
-        .consistency-note {
-            background: #f6d365;
-            color: #a45fbf;
-            font-size: 0.99rem;
-            border-radius: 10px;
-            padding: 7px 15px;
-            margin-bottom: 11px;
-            display: none;
-            text-align: center;
-        }
-        /* Modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 999;
-            left: 0; top: 0;
-            width: 100%; height: 100%;
-            background: rgba(164,95,191,0.18);
-            align-items: center;
-            justify-content: center;
-        }
-        .modal-content {
-            background: #fff;
-            padding: 28px 22px 20px;
-            border-radius: 24px;
-            box-shadow: 0 4px 32px rgba(164,95,191,0.15);
-            text-align: center;
-            max-width: 370px;
-            margin: auto;
-        }
-        .modal-content h2 {
-            font-size: 1.28rem;
-            color: #a45fbf;
-            margin-bottom: 10px;
-        }
-        .modal-content p {
-            font-size: 1.06rem;
-            color: #3a3550;
-            margin-bottom: 16px;
-        }
-        .modal-close {
-            background: #fbc2eb;
-            color: #a45fbf;
-            border: none;
-            border-radius: 10px;
-            padding: 8px 18px;
-            font-size: 1.06rem;
-            font-weight: 700;
-            cursor: pointer;
-        }
-        .premium-features-modal ul {
-            text-align: left;
-            margin: 0 auto 12px;
-            padding: 0 0 0 19px;
-        }
-        .premium-features-modal li {
-            margin-bottom: 7px;
-            font-size: 1.03rem;
-        }
-        /* Premium report styling */
-        .premium-report {
-            background: #fff7fa;
-            border-radius: 18px;
-            box-shadow: 0 2px 16px rgba(186,147,216,0.09);
-            padding: 22px 20px 22px;
-            margin: 18px 0 8px;
-            font-size: 1.06rem;
-        }
-        .premium-report h3 {
-            color: #a45fbf;
-            margin-bottom: 8px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1.19rem;
-        }
+        #loadingText { color: #a45fbf; font-size: 1.06rem;}
+        .results { display: none; width: 100%; margin-top: 20px;}
+        .cat-personality-type { text-align: center; margin-bottom: 14px;}
+        .cat-personality-emoji { font-size: 2.8rem; margin-bottom: 0px; display: block;}
+        #catTypeName { font-family: 'Montserrat', Arial, sans-serif; font-size: 1.37rem; margin-bottom: 2px; color: #a45fbf;}
+        .cat-personality-tagline { font-size: 1.1rem; color: #3a3550; margin-bottom: 10px; font-family: 'Quicksand', sans-serif;}
+        .cat-breed { background: #fbc2eb; color: #a45fbf; font-size: 1.06rem; font-weight: 700; padding: 4px 14px; border-radius: 16px; display: inline-block; margin-bottom: 11px;}
+        .cat-strengths, .cat-quirks, .cat-caretips { margin-bottom: 12px; }
+        .premium-btn { background: linear-gradient(90deg, #fbc2eb 0%, #a6c1ee 100%); color: #fff; border: none; border-radius: 10px; padding: 10px 17px; font-size: 1.09rem; font-weight: 600; cursor: pointer; margin-top: 16px; margin-bottom: -6px;}
+        .premium-btn:active { transform: scale(0.97);}
+        .premium-report { background: #fff7fa; border-radius: 18px; box-shadow: 0 2px 16px rgba(186,147,216,0.09); padding: 22px 20px 22px; margin: 18px 0 8px; font-size: 1.06rem; display:none;}
+        .premium-report h3 { color: #a45fbf; margin-bottom: 8px; font-family: 'Montserrat', sans-serif; font-size: 1.19rem;}
+        .premium-report p { margin-bottom: 7px;}
+        .cat-share { display: flex; gap: 13px; justify-content: center; margin-top: 14px;}
+        .cat-btn { background: #fbc2eb; color: #a45fbf; border: none; border-radius: 10px; padding: 10px 17px; font-size: 1.06rem; font-weight: 600; cursor: pointer; transition: background 0.2s, transform 0.2s;}
+        .cat-btn:active { transform: scale(0.96);}
+        .startover-btn { background: #fff; color: #a45fbf; border: 2px solid #fbc2eb; border-radius: 10px; padding: 9px 15px; font-size: 1.02rem; font-weight: 600; cursor: pointer; margin-top: 11px; margin-bottom: -6px;}
+        .startover-btn:active { background: #fbc2eb;}
         @media (max-width: 570px) {
             .container { max-width: 98vw; padding: 17px 3vw 14px; }
             .app-bar { font-size: 1.34rem; }
-            .modal-content { max-width: 95vw;}
         }
     </style>
 </head>
 <body>
     <div class="app-bar">
-        <span class="paw">🐾</span> Cat Personality Analyzer
+        🐾 Cat Personality Analyzer
     </div>
     <div class="container">
         <div class="header">
-            <div class="subtitle">Discover your cat's unique personality with science & AI</div>
-            <div class="science-badge">✨ Based on "Feline Five" Research</div>
+            <div style="color:#a45fbf;font-size:1.15rem;">Instantly discover your cat's unique personality type!</div>
+            <div style="background:#fbc2eb;color:#a45fbf;font-size:0.95rem;padding:4px 15px;border-radius:15px;display:inline-block;font-weight:500;margin-bottom:12px;">✨ No quiz — just upload a photo!</div>
         </div>
         <div class="upload-area" id="uploadArea">
             <div class="upload-icon">📸</div>
             <div class="upload-text">Click to upload your cat's photo</div>
             <div class="upload-hint">or drag and drop an image here</div>
             <input type="file" id="fileInput" accept="image/*">
-            <div class="paw-bg">🐾</div>
         </div>
         <div class="preview-container" id="previewContainer" style="display:none;">
             <img id="previewImage" class="preview-image" alt="Cat preview">
         </div>
+        <form class="cat-extra-form" id="catExtraForm" style="display:none;">
+            <label for="catNameInput">Cat's Name (optional)</label>
+            <input id="catNameInput" type="text" placeholder="e.g. Whiskers">
+            <label for="catToyInput">Favorite Toy (optional)</label>
+            <input id="catToyInput" type="text" placeholder="e.g. Feather Wand">
+        </form>
         <button class="analyze-btn" id="analyzeBtn" style="display:none;">
-            🧬 Analyze My Cat's Personality
+            🧬 Analyze My Cat
         </button>
         <div class="loading" id="loading">
             <div class="spinner"></div>
-            <p id="loadingText">Analyzing your cat with science magic...</p>
+            <p id="loadingText">Analyzing your cat...</p>
         </div>
         <div class="results" id="results">
-            <div class="consistency-note" id="consistencyNote">
-                ✅ <strong>Consistent Results!</strong><br>
-                <span style="opacity: 0.9; font-weight: normal;">This image has been analyzed before with the same results</span>
+            <div class="cat-personality-type" id="catPersonalityType">
+                <span class="cat-personality-emoji" id="catPersonalityEmoji">😺</span>
+                <h2 id="catTypeName">Loading...</h2>
+                <p class="cat-personality-tagline" id="catTypeTagline">"Loading..."</p>
+                <span class="cat-breed" id="catBreed"></span>
             </div>
-            <div class="personality-type" id="personalityType">
-                <span class="personality-emoji" id="personalityEmoji">😺</span>
-                <h2 id="typeName">Loading...</h2>
-                <p class="personality-tagline" id="tagline">"Loading..."</p>
-            </div>
-            <div class="feline-five" id="felineFive"></div>
-            <div class="premium-section">
-                <h3>🌟 Premium Analysis</h3>
-                <div class="premium-features">
-                    <div class="premium-feature">🎨 Detailed Cat Report: Complete personality, care tips, activities, and more!</div>
-                    <div class="premium-feature">📝 Download as PDF for sharing & printing</div>
-                </div>
-                <button class="share-btn premium-btn" id="premiumBtn">🌟 View Premium Report</button>
-                <button class="share-btn download-btn" id="downloadPdfBtn">📄 Download Premium PDF</button>
-            </div>
-            <div id="premiumReport" style="display:none;"></div>
-            <div class="share-buttons">
-                <button class="share-btn" id="shareBtn">📱 Share Results</button>
-                <button class="share-btn startover-btn" id="startOverBtn">🔄 Start Over</button>
+            <div class="cat-strengths" id="catStrengths"></div>
+            <div class="cat-quirks" id="catQuirks"></div>
+            <div class="cat-caretips" id="catCareTips"></div>
+            <button class="premium-btn" id="premiumBtn">🌟 Unlock Premium Report</button>
+            <div class="premium-report" id="premiumReport"></div>
+            <div class="cat-share">
+                <button class="cat-btn" id="shareBtn">📱 Share Type</button>
+                <button class="cat-btn startover-btn" id="startOverBtn">🔄 Start Over</button>
+                <button class="cat-btn" id="downloadPdfBtn" style="display:none;">📄 Download PDF</button>
             </div>
         </div>
     </div>
-    <!-- Modal container -->
-    <div class="modal" id="modal">
-        <div class="modal-content" id="modalContent"></div>
-    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
-        // Personalities for demo purposes
-        const personalities = [
+        // 12+ unique personality types!
+        const catTypes = [
             {
+                name: "The Playful Explorer",
                 emoji: "🧭",
-                name: "The Confident Explorer",
-                tagline: "Adventure is out there, and I'll find it!",
-                scores: [
-                    {trait: "Openness", val: 85},
-                    {trait: "Dominance", val: 76},
-                    {trait: "Impulsiveness", val: 38},
-                    {trait: "Agreeableness", val: 67},
-                    {trait: "Neuroticism", val: 32}
-                ],
-                likes: "Exploring new places, window perching, meeting new humans.",
-                dislikes: "Closed doors, loud noises, being ignored.",
-                activities: "Interactive toys, puzzle feeders, climbing trees.",
-                psychology: "Adventurous, confident, loves stimulation.",
-                careTips: "Encourage exploration with safe spaces, rotating toys, and puzzle feeders.",
-                horoscope: "This month: Expect new adventures and hidden treats!"
+                tagline: "Curious and adventurous, always seeking new things!",
+                strengths: ["Quick learner", "Fearless", "Friendly"],
+                quirks: ["Chases everything", "Gets into mischief"],
+                careTips: ["Interactive toys", "Safe outdoor time"],
+                breeds: ["Abyssinian", "Bengal", "Savannah", "Egyptian Mau"]
             },
             {
-                emoji: "😻",
+                name: "The Regal Dreamer",
+                emoji: "👑",
+                tagline: "Elegant, calm, and loves life's comforts.",
+                strengths: ["Patient", "Gentle", "Affectionate"],
+                quirks: ["Prefers quiet", "May ignore strangers"],
+                careTips: ["Soft bedding", "Gentle brushing"],
+                breeds: ["Persian", "Ragdoll", "British Shorthair"]
+            },
+            {
+                name: "The Snuggly Strategist",
+                emoji: "🛋️",
+                tagline: "Master of cuddles and cozy corners.",
+                strengths: ["Loyal", "Observant", "Affectionate"],
+                quirks: ["Hides toys", "Sleeps in odd places"],
+                careTips: ["Cozy hideaways", "Soft blankets"],
+                breeds: ["Scottish Fold", "Birman", "Exotic Shorthair"]
+            },
+            {
+                name: "The Daring Dreamer",
+                emoji: "🌠",
+                tagline: "Brave, imaginative, and a bit mysterious.",
+                strengths: ["Bold", "Creative", "Charming"],
+                quirks: ["Unpredictable naps", "Loves heights"],
+                careTips: ["Tall cat trees", "Puzzle feeders"],
+                breeds: ["Maine Coon", "Norwegian Forest Cat"]
+            },
+            {
                 name: "The Gentle Companion",
-                tagline: "Love and cuddles are my superpower.",
-                scores: [
-                    {trait: "Openness", val: 61},
-                    {trait: "Dominance", val: 42},
-                    {trait: "Impulsiveness", val: 21},
-                    {trait: "Agreeableness", val: 94},
-                    {trait: "Neuroticism", val: 19}
-                ],
-                likes: "Lap naps, gentle petting, soft blankets.",
-                dislikes: "Being alone, rough play, cold floors.",
-                activities: "Snuggling, slow wand toys, ambient music.",
-                psychology: "Affectionate, calm, thrives on connection.",
-                careTips: "Provide cozy spaces, plenty of affection, and soft blankets.",
-                horoscope: "This month: Extra cuddles bring extra joy."
+                emoji: "🤗",
+                tagline: "Affectionate and caring, everyone's best friend.",
+                strengths: ["Great with families", "Soothing presence", "Adaptable"],
+                quirks: ["May get bored alone", "Sometimes too trusting"],
+                careTips: ["Company", "Gentle play"],
+                breeds: ["Siberian", "Tonkinese", "Turkish Angora"]
+            },
+            {
+                name: "The Social Butterfly",
+                emoji: "🦋",
+                tagline: "Loves meeting new faces and being the center of attention.",
+                strengths: ["Vocal", "Entertaining", "Energetic"],
+                quirks: ["Can be demanding", "Needs stimulation"],
+                careTips: ["Lots of play", "Interactive games"],
+                breeds: ["Siamese", "Oriental", "Sphynx"]
+            },
+            {
+                name: "The Wise Observer",
+                emoji: "🦉",
+                tagline: "Calm, intelligent, and always watching.",
+                strengths: ["Smart", "Patient", "Resourceful"],
+                quirks: ["Watches from afar", "Takes time to warm up"],
+                careTips: ["Gentle encouragement", "Quiet spaces"],
+                breeds: ["Russian Blue", "Chartreux", "Korat"]
+            },
+            {
+                name: "The Joyful Jester",
+                emoji: "🎪",
+                tagline: "Always entertaining, makes every day fun.",
+                strengths: ["Playful", "Funny", "Creative"],
+                quirks: ["Clownish", "Invents own games"],
+                careTips: ["Lots of toys", "Room to play"],
+                breeds: ["American Curl", "Devon Rex", "Cornish Rex"]
+            },
+            {
+                name: "The Calm Guardian",
+                emoji: "🛡️",
+                tagline: "Steady, watchful, always there for you.",
+                strengths: ["Protective", "Calm", "Loyal"],
+                quirks: ["May seem reserved", "Prefers routine"],
+                careTips: ["Consistent environment", "Trust-building games"],
+                breeds: ["Chartreux", "British Shorthair", "Manx"]
+            },
+            {
+                name: "The Sweetheart",
+                emoji: "💖",
+                tagline: "Overflowing with love and gentle purrs.",
+                strengths: ["Caring", "Affectionate", "Patient"],
+                quirks: ["Follows you everywhere", "Sensitive to moods"],
+                careTips: ["Extra cuddles", "Gentle grooming"],
+                breeds: ["Ragdoll", "Birman", "Tonkinese"]
+            },
+            {
+                name: "The Mellow Muse",
+                emoji: "🎨",
+                tagline: "Artistic, relaxed, and wonderfully unique.",
+                strengths: ["Creative naps", "Easygoing", "Inspires others"],
+                quirks: ["Unusual sleeping spots", "Watches TV"],
+                careTips: ["Ambient music", "Window views"],
+                breeds: ["Turkish Van", "Exotic Shorthair"]
+            },
+            {
+                name: "The Spirited Adventurer",
+                emoji: "🌄",
+                tagline: "Bold and always ready for new horizons.",
+                strengths: ["Energetic", "Fearless", "Curious"],
+                quirks: ["Tries to escape", "Climbs everything"],
+                careTips: ["Secure windows", "Leash training"],
+                breeds: ["Bengal", "Savannah", "Ocicat"]
             }
-            // ...add more as needed...
         ];
 
-        // Demo: Placeholder API integration
-        async function analyzeCatWithAPI(imageDataUrl) {
-            // Replace this endpoint with your actual ML backend!
-            // For demo, we'll just randomly pick a personality
-            return new Promise(resolve => {
-                setTimeout(() => {
-                    const idx = Math.floor(Math.random() * personalities.length);
-                    resolve(personalities[idx]);
-                }, 1800);
-            });
+        // If breed not detected, fallback breeds for variety logic
+        const fallbackBreeds = [
+            "Domestic Shorthair", "Domestic Longhair", "Tabby", "Calico", "Tuxedo", "Black Cat"
+        ];
+
+        // Utility: Cat horoscopes, affirmations, extra tips
+        function getPremiumDetails(type, name, breed) {
+            const horoscopes = [
+                "Today your cat will discover a new favorite napping spot.",
+                "Positive feline energy surrounds your home!",
+                "Extra cuddles will bring good luck.",
+                "Playtime brings new friendships.",
+                "Your cat’s curiosity leads to happy surprises.",
+                "A cozy blanket is the key to contentment today.",
+                "Every purr brings a smile to those around you."
+            ];
+            const affirmations = [
+                "Every day is brighter with your cat by your side.",
+                "Your cat’s unique personality is a gift.",
+                "No one can resist your cat’s charm and warmth.",
+                "Your cat brings joy and laughter to every moment.",
+                "Your furry friend is truly one-of-a-kind!"
+            ];
+            // Add more extra tips if you like!
+            return {
+                horoscope: horoscopes[Math.floor(Math.random()*horoscopes.length)],
+                affirmation: affirmations[Math.floor(Math.random()*affirmations.length)],
+                extraCare: `A little extra attention for a ${type.name.toLowerCase()} like ${name||"your cat"} is always appreciated.`
+            };
         }
 
         // DOM elements
@@ -479,22 +253,24 @@
         const analyzeBtn = document.getElementById('analyzeBtn');
         const loading = document.getElementById('loading');
         const results = document.getElementById('results');
-        const consistencyNote = document.getElementById('consistencyNote');
-        const personalityEmoji = document.getElementById('personalityEmoji');
-        const typeName = document.getElementById('typeName');
-        const tagline = document.getElementById('tagline');
-        const felineFive = document.getElementById('felineFive');
+        const catPersonalityEmoji = document.getElementById('catPersonalityEmoji');
+        const catTypeName = document.getElementById('catTypeName');
+        const catTypeTagline = document.getElementById('catTypeTagline');
+        const catBreed = document.getElementById('catBreed');
+        const catStrengths = document.getElementById('catStrengths');
+        const catQuirks = document.getElementById('catQuirks');
+        const catCareTips = document.getElementById('catCareTips');
+        const premiumBtn = document.getElementById('premiumBtn');
+        const premiumReport = document.getElementById('premiumReport');
         const startOverBtn = document.getElementById('startOverBtn');
         const shareBtn = document.getElementById('shareBtn');
-        const premiumBtn = document.getElementById('premiumBtn');
-        const modal = document.getElementById('modal');
-        const modalContent = document.getElementById('modalContent');
-        const premiumReport = document.getElementById('premiumReport');
         const downloadPdfBtn = document.getElementById('downloadPdfBtn');
+        const catExtraForm = document.getElementById('catExtraForm');
+        const catNameInput = document.getElementById('catNameInput');
+        const catToyInput = document.getElementById('catToyInput');
 
-        let selectedPersonality = personalities[0];
-        let lastImageHash = null;
-        let lastResultIdx = null;
+        let catResult = null;
+        let premiumShown = false;
 
         function resetApp() {
             previewImage.src = "";
@@ -502,50 +278,14 @@
             analyzeBtn.style.display = "none";
             results.style.display = "none";
             loading.style.display = "none";
-            consistencyNote.style.display = "none";
             uploadArea.style.display = "block";
             fileInput.value = "";
+            catExtraForm.style.display = "none";
             premiumReport.style.display = "none";
-            premiumReport.innerHTML = "";
+            premiumBtn.style.display = "inline-block";
+            downloadPdfBtn.style.display = "none";
+            premiumShown = false;
         }
-
-        function showResults(sameImage=false) {
-            if (sameImage) {
-                consistencyNote.style.display = "block";
-            } else {
-                consistencyNote.style.display = "none";
-            }
-            personalityEmoji.textContent = selectedPersonality.emoji;
-            typeName.textContent = selectedPersonality.name;
-            tagline.textContent = `"${selectedPersonality.tagline}"`;
-            felineFive.innerHTML = `<ul class="feline-five-list">
-                ${selectedPersonality.scores.map(s => 
-                    `<li>
-                        <span>${s.trait}</span>
-                        <div class="feline-score-bar">
-                            <div class="feline-score-bar-inner" style="width:${s.val}%;"></div>
-                        </div>
-                        <span style="margin-left:7px; font-weight:600;">${s.val}</span>
-                    </li>`
-                ).join("")}
-            </ul>`;
-            results.style.display = "block";
-            premiumReport.style.display = "none";
-            premiumReport.innerHTML = "";
-        }
-
-        function showModal(title, message, extraHtml="") {
-            modalContent.innerHTML = `
-                <h2>${title}</h2>
-                <p>${message}</p>
-                ${extraHtml}
-                <button class="modal-close" onclick="document.getElementById('modal').style.display='none'">OK</button>
-            `;
-            modal.style.display = "flex";
-        }
-        modal.addEventListener("click", function(e) {
-            if (e.target === modal) modal.style.display = "none";
-        });
 
         // Upload logic
         uploadArea.addEventListener('click', () => fileInput.click());
@@ -554,4 +294,61 @@
             uploadArea.classList.add('dragover');
         });
         uploadArea.addEventListener('dragleave', () => {
-            uplo
+            uploadArea.classList.remove('dragover');
+        });
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            if (e.dataTransfer.files.length) {
+                handleFile(e.dataTransfer.files[0]);
+            }
+        });
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length) {
+                handleFile(fileInput.files[0]);
+            }
+        });
+
+        function handleFile(file) {
+            if (!file.type.startsWith('image/')) return;
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                previewImage.src = evt.target.result;
+                previewContainer.style.display = 'flex';
+                analyzeBtn.style.display = 'inline-block';
+                uploadArea.style.display = 'none';
+                results.style.display = 'none';
+                catExtraForm.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        }
+
+        // Hugging Face Spaces Cat Breed Classifier API (stub for demo, you can integrate actual API)
+        async function getBreedFromAPI(imageDataUrl) {
+            // For demo: random breed from fallbackBreeds
+            // To use real API, uncomment below & integrate Hugging Face
+            /*
+            const base64 = imageDataUrl.split(',')[1];
+            const response = await fetch("https://hf.space/embed/arny/cat-breed-classifier/api/predict", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ data: [base64] })
+            });
+            if (!response.ok) throw new Error("API error");
+            const result = await response.json();
+            // result.data[0] is the predicted breed
+            return result.data[0];
+            */
+            // For demo, pick a random fallback breed
+            return fallbackBreeds[Math.floor(Math.random() * fallbackBreeds.length)];
+        }
+
+        function pickType(breed) {
+            // Find types matching breed first
+            let possibleTypes = catTypes.filter(type => type.breeds && type.breeds.includes(breed));
+            if (possibleTypes.length === 0) {
+                possibleTypes = catTypes;
+            }
+            // Shuffle and pick one for variety
+            possibleTypes = possibleTypes.sort(() => Math.random() - 0.5);
+            let chosenType = possible
