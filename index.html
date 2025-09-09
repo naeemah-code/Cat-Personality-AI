@@ -352,3 +352,18 @@
             // Shuffle and pick one for variety
             possibleTypes = possibleTypes.sort(() => Math.random() - 0.5);
             let chosenType = possible
+
+        // In your premiumBtn click handler:
+premiumBtn.addEventListener('click', () => {
+    window.location.href = "https://buy.stripe.com/test_aFa7sLbkx2cg01sgQ17g400";
+});
+
+// When the page loads, check for ?paid=1 in URL to show the premium report:
+window.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('paid') === '1') {
+        premiumShown = true;
+        showPremium();
+        window.history.replaceState({}, document.title, window.location.pathname); // Clean URL
+    }
+});
